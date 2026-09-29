@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Student Productivity Predictor</title>
+  <style>
+    body{font-family:system-ui,Arial,sans-serif;background:#f4f6fb;margin:0;padding:24px;color:#1f2937}
+    .card{max-width:520px;margin:auto;background:#fff;padding:28px;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+    h1{font-size:1.4rem;margin-top:0}
+    label{display:block;font-size:.9rem;margin:14px 0 4px}
+    input{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:8px;font-size:1rem;box-sizing:border-box}
+    button{margin-top:22px;width:100%;padding:11px;border:0;border-radius:8px;background:#2563eb;color:#fff;font-size:1rem;cursor:pointer}
+    button:hover{background:#1d4ed8}
+    .result{margin-top:22px;padding:16px;border-radius:10px;background:#ecfdf5;text-align:center}
+    .result .score{font-size:2.2rem;font-weight:700;color:#047857}
+    .error{margin-top:18px;padding:12px;border-radius:8px;background:#fef2f2;color:#b91c1c}
+    small{color:#6b7280}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Student Productivity Predictor</h1>
+    <small>Enter a student's daily habits to predict the productivity score (0 to 100).</small>
+
+    <form action="/predict" method="POST">
+      {% for name, label, lo, hi, step in fields %}
+        <label for="{{ name }}">{{ label }} <small>({{ lo }} to {{ hi }})</small></label>
+        <input type="number" id="{{ name }}" name="{{ name }}" min="{{ lo }}" max="{{ hi }}"
+               step="{{ step }}" value="{{ values.get(name, '') }}" required>
+      {% endfor %}
+      <button type="submit">Predict</button>
+    </form>
+
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    {% if prediction is not none %}
+      <div class="result">
+        <div>Predicted productivity score</div>
+        <div class="score">{{ prediction }}</div>
+        <div>{{ label }}</div>
+      </div>
+    {% endif %}
+  </div>
+</body>
+</html>
